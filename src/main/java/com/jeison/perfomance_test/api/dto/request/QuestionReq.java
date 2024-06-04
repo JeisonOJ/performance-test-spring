@@ -1,5 +1,9 @@
 package com.jeison.perfomance_test.api.dto.request;
 
+import java.util.List;
+
+import com.jeison.perfomance_test.utils.enums.TypeQuestion;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -11,14 +15,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SurveyReq {
+public class QuestionReq {
 
-    @NotBlank(message = "title required")
-    private String title;
-    private String description;
+    @NotBlank(message = "text required")
+    private String text;
+    @NotNull(message = "type required")
+    private TypeQuestion type;
     @NotNull(message = "active required")
     private Boolean isActive;
-    @NotNull(message = "user id required")
-    private Long userId;
-
+    private List<OptionQuestionReq> options;
 }

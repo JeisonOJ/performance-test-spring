@@ -11,14 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SurveyReq {
+public class OptionQuestionReq {
 
-    @NotBlank(message = "title required")
-    private String title;
-    private String description;
+    @NotBlank(message = "text required")
+    private String text;
     @NotNull(message = "active required")
     private Boolean isActive;
-    @NotNull(message = "user id required")
-    private Long userId;
 
 }
