@@ -32,7 +32,7 @@ public class User {
     @Column(nullable = false, length = 100)
     private String email;
     @Column(nullable = false)
-    private boolean isActive;
+    private Boolean isActive;
     @OneToMany(mappedBy = "user",
     fetch = FetchType.LAZY,
     cascade = CascadeType.ALL,

@@ -24,7 +24,9 @@ public class UserReq {
     @Email(message = "Not valid email")
     @Size(max = 100, message = "Email is too long")
     private String email;
-    @NotNull(message = "Role required")
-    private boolean isActive;
+    @NotNull(message = "active required")
+    // @AssertTrue
+    // @AssertFalse
+    private Boolean isActive;
 
 }
