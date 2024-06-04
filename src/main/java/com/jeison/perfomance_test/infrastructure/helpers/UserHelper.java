@@ -11,8 +11,7 @@ public class UserHelper {
                 .id(user.getId())
                 .userName(user.getUserName())
                 .email(user.getEmail())
-                .fullname(user.getFullName())
-                .roleUser(user.getRoleUser())
+                .isActive(user.isActive())
                 .build();
     }
 
@@ -21,8 +20,7 @@ public class UserHelper {
                 .userName(userReq.getUserName())
                 .password(userReq.getPassword())
                 .email(userReq.getEmail())
-                .fullName(userReq.getFullName())
-                .roleUser(userReq.getRoleUser())
+                .isActive(userReq.isActive())
                 .build();
     }
 

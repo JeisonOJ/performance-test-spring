@@ -5,4 +5,6 @@ import com.jeison.perfomance_test.api.dto.response.UserResp;
 
 public interface IUserService extends CrudService<UserReq, UserResp, Long> {
 
+    public final String FIELD_BY_SORT = "userName";
+
 }

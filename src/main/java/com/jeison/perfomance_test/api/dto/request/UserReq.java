@@ -1,7 +1,5 @@
 package com.jeison.perfomance_test.api.dto.request;
 
-import com.jeison.perfomance_test.utils.enums.RoleUser;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -26,8 +24,7 @@ public class UserReq {
     @Email(message = "Not valid email")
     @Size(max = 100, message = "Email is too long")
     private String email;
-    private String fullName;
     @NotNull(message = "Role required")
-    private RoleUser roleUser;
+    private boolean isActive;
 
 }
