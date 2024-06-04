@@ -1,11 +1,18 @@
 package com.jeison.perfomance_test.domain.entities;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,4 +34,15 @@ public class Question {
     private String type;
     @Column(nullable = false)
     private boolean isActive;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+        name = "survey_id",
+        referencedColumnName = "id"
+    )
+    private Survey survey;
+    @OneToMany(mappedBy = "option",
+    fetch = FetchType.LAZY,
+    cascade = CascadeType.ALL,
+    orphanRemoval = false)
+    private List<OptionQuestion> options;
 }
