@@ -1,63 +1,63 @@
-package com.jeison.perfomance_test.infrastructure.helpers;
+// package com.jeison.perfomance_test.infrastructure.helpers;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.stream.Collectors;
+// import java.io.IOException;
+// import java.nio.file.Files;
+// import java.nio.file.Path;
+// import java.nio.file.Paths;
+// import java.time.LocalDateTime;
+// import java.time.format.DateTimeFormatter;
+// import java.util.stream.Collectors;
 
-import org.springframework.http.MediaType;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Component;
+// import org.springframework.http.MediaType;
+// import org.springframework.mail.javamail.JavaMailSender;
+// import org.springframework.stereotype.Component;
 
-import jakarta.mail.internet.InternetAddress;
-import jakarta.mail.internet.MimeMessage;
-import lombok.AllArgsConstructor;
+// import jakarta.mail.internet.InternetAddress;
+// import jakarta.mail.internet.MimeMessage;
+// import lombok.AllArgsConstructor;
 
-@Component
-@AllArgsConstructor
-public class EmailHelper {
+// @Component
+// @AllArgsConstructor
+// public class EmailHelper {
 
-    private JavaMailSender mailSender;
+//     private JavaMailSender mailSender;
 
-     public void sendMail(String destinity, String nameClient, String nameEmployee, LocalDateTime date){
-        MimeMessage message = mailSender.createMimeMessage();
+//      public void sendMail(String destinity, String nameClient, String nameEmployee, LocalDateTime date){
+//         MimeMessage message = mailSender.createMimeMessage();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-        String dateAppointment = date.format(formatter);
-        String htmlContent = this.readHTMLTemplate(nameClient, nameEmployee, dateAppointment);
+//         String dateAppointment = date.format(formatter);
+//         String htmlContent = this.readHTMLTemplate(nameClient, nameEmployee, dateAppointment);
 
-        try {
-            message.setFrom(new InternetAddress("kwmejia9@gmail.com"));
-            message.setSubject("Confirmación de cita en Beauty Salon");
+//         try {
+//             message.setFrom(new InternetAddress("kwmejia9@gmail.com"));
+//             message.setSubject("Confirmación de cita en Beauty Salon");
 
-            message.setRecipients(MimeMessage.RecipientType.TO,destinity);
-            message.setContent(htmlContent,MediaType.TEXT_HTML_VALUE);
+//             message.setRecipients(MimeMessage.RecipientType.TO,destinity);
+//             message.setContent(htmlContent,MediaType.TEXT_HTML_VALUE);
 
-            mailSender.send(message);
-            System.out.println("Email enviado");
+//             mailSender.send(message);
+//             System.out.println("Email enviado");
 
-        } catch (Exception e) {
-            System.out.println("ERROR no se pudo enviar el email " + e.getMessage());
+//         } catch (Exception e) {
+//             System.out.println("ERROR no se pudo enviar el email " + e.getMessage());
 
-        }
-    }
+//         }
+//     }
 
 
-    private String readHTMLTemplate(String nameClient, String nameEmployee, String date){
-        //Indicar en donde se encuentra el template
-        final Path path = Paths.get("src/main/resources/emails/email.html");
+//     private String readHTMLTemplate(String nameClient, String nameEmployee, String date){
+//         //Indicar en donde se encuentra el template
+//         final Path path = Paths.get("src/main/resources/emails/email.html");
 
-        try (var lines = Files.lines(path)){
-            var html = lines.collect(Collectors.joining());
+//         try (var lines = Files.lines(path)){
+//             var html = lines.collect(Collectors.joining());
 
-            return html.replace("{name}", nameClient).replace("{employee}", nameEmployee).replace("{date}", date);
-        } catch (IOException e) {
-            System.out.println("No se pudo leer el html");
-            throw new RuntimeException();
-        }
-    }
-}
+//             return html.replace("{name}", nameClient).replace("{employee}", nameEmployee).replace("{date}", date);
+//         } catch (IOException e) {
+//             System.out.println("No se pudo leer el html");
+//             throw new RuntimeException();
+//         }
+//     }
+// }
