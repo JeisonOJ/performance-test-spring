@@ -40,7 +40,7 @@ public class Question {
         referencedColumnName = "id"
     )
     private Survey survey;
-    @OneToMany(mappedBy = "option",
+    @OneToMany(mappedBy = "question",
     fetch = FetchType.LAZY,
     cascade = CascadeType.ALL,
     orphanRemoval = false)
