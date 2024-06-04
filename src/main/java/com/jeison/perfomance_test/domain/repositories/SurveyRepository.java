@@ -6,6 +6,10 @@ import org.springframework.stereotype.Repository;
 import com.jeison.perfomance_test.domain.entities.Survey;
 
 @Repository
-public interface SurveyRepository extends JpaRepository<Survey,Long>{
+public interface SurveyRepository extends JpaRepository<Survey, Long> {
+/*
+ * customized method in JPA
+ */
+    public Survey findByTitle(String title);
 
 }

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jeison.perfomance_test.api.dto.errors.ErrorResp;
 import com.jeison.perfomance_test.api.dto.request.SurveyReq;
 import com.jeison.perfomance_test.api.dto.response.SurveyResp;
+import com.jeison.perfomance_test.api.dto.response.SurveyRespWithQuestions;
 import com.jeison.perfomance_test.infrastructure.abstract_services.ISurveyService;
 import com.jeison.perfomance_test.utils.enums.SortType;
 
@@ -49,16 +50,16 @@ public class SurveyController {
         return ResponseEntity.ok(this.service.findAll(page - 1, size, sortType));
     }
 
-    @Operation(summary = "Get an survey by its ID number")
+    @Operation(summary = "Get a survey by its ID number and its questions")
     @ApiResponse(responseCode = "400", description = "When the ID is not found", content = {
             @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResp.class))
     })
     @GetMapping("/{id}")
-    public ResponseEntity<SurveyResp> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findById(id));
+    public ResponseEntity<SurveyRespWithQuestions> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.findByIdWithQuestions(id));
     }
 
-    @Operation(summary = "Create an survey")
+    @Operation(summary = "Create a survey")
     @ApiResponse(responseCode = "400", description = "When the request is not valid", content = {
             @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResp.class))
     })
@@ -67,7 +68,7 @@ public class SurveyController {
         return ResponseEntity.ok(service.create(surveyReq));
     }
 
-    @Operation(summary = "Update an survey by its ID number")
+    @Operation(summary = "Update a survey by its ID number")
     @ApiResponse(responseCode = "400", description = "When the request is not valid", content = {
             @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResp.class))
     })
@@ -76,7 +77,7 @@ public class SurveyController {
         return ResponseEntity.ok(service.update(surveyReq, id));
     }
 
-    @Operation(summary = "Delete an survey by its ID number")
+    @Operation(summary = "Delete a survey by its ID number")
     @ApiResponse(responseCode = "204", description = "Survey deleted successfully")
     @ApiResponse(responseCode = "400", description = "When the ID is not found", content = {
             @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResp.class))

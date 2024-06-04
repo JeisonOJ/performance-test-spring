@@ -23,5 +23,7 @@ public class QuestionReq {
     private TypeQuestion type;
     @NotNull(message = "active required")
     private Boolean isActive;
+    @NotNull(message = "survey id required")
+    private Long surveyId;
     private List<OptionQuestionReq> options;
 }

@@ -19,6 +19,7 @@ public class QuestionResp {
     private String text;
     private TypeQuestion type;
     private Boolean isActive;
+    private SurveyResp surveyResp;
     private List<OptionQuestionResp> options;
 
 }

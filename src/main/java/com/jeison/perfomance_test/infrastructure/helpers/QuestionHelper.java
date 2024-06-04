@@ -17,6 +17,7 @@ public class QuestionHelper {
                 .type(question.getType())
                 .isActive(question.getIsActive())
                 .options(new ArrayList<>())
+                .surveyResp(SurveyHelper.surveyToResp(question.getSurvey()))
                 .build();
         }
         return QuestionResp.builder()
@@ -25,6 +26,7 @@ public class QuestionHelper {
                 .type(question.getType())
                 .isActive(question.getIsActive())
                 .options(question.getOptions().stream().map(option-> OptionQuestionHelper.questionToResp(option)).toList())
+                .surveyResp(SurveyHelper.surveyToResp(question.getSurvey()))
                 .build();
     }
 
