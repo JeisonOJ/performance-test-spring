@@ -1,5 +1,7 @@
 package com.jeison.perfomance_test.infrastructure.services;
 
+import java.util.Objects;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,8 +13,12 @@ import com.jeison.perfomance_test.api.dto.request.SurveyReq;
 import com.jeison.perfomance_test.api.dto.response.SurveyResp;
 import com.jeison.perfomance_test.api.dto.response.SurveyRespWithQuestions;
 import com.jeison.perfomance_test.domain.entities.Survey;
+import com.jeison.perfomance_test.domain.entities.User;
 import com.jeison.perfomance_test.domain.repositories.SurveyRepository;
+import com.jeison.perfomance_test.domain.repositories.UserRepository;
 import com.jeison.perfomance_test.infrastructure.abstract_services.ISurveyService;
+import com.jeison.perfomance_test.infrastructure.helpers.EmailHelper;
+import com.jeison.perfomance_test.infrastructure.helpers.QuestionHelper;
 import com.jeison.perfomance_test.infrastructure.helpers.SurveyHelper;
 import com.jeison.perfomance_test.utils.enums.SortType;
 import com.jeison.perfomance_test.utils.exception.BadRequestException;
@@ -24,11 +30,14 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class SurveyService implements ISurveyService {
 
-    // @Autowired
-    // private final EmailHelper emailHelper;
+    @Autowired
+    private final EmailHelper emailHelper;
 
     @Autowired
     private SurveyRepository surveyRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public Page<SurveyResp> findAll(int page, int size, SortType sortType) {
@@ -50,8 +59,16 @@ public class SurveyService implements ISurveyService {
     }
 
     public SurveyRespWithQuestions findByIdWithQuestions(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findById'");
+        Survey survey = getById(id);
+        return SurveyRespWithQuestions.builder()
+                .id(survey.getId())
+                .description(survey.getDescription())
+                .timeStamp(survey.getTimeStamp())
+                .title(survey.getTitle())
+                .isActive(survey.getIsActive())
+                .questions(survey.getQuestions().stream().map(question -> QuestionHelper.questionToResp(question))
+                        .toList())
+                .build();
     }
 
     @Override
@@ -62,12 +79,26 @@ public class SurveyService implements ISurveyService {
 
     @Override
     public SurveyResp create(SurveyReq request) {
-        
-        // if (Objects.nonNull(client.getEmail())) {
-        // this.emailHelper.sendMail(client.getEmail(), client.getFirstName(),
-        // employee.getFirstName(), appointment.getDateTime());
-        // }
-        return SurveyHelper.surveyToResp(surveyRepository.save(SurveyHelper.reqToSurvey(request)));
+        Survey survey = SurveyHelper.reqToSurvey(request);
+        if (Objects.nonNull(surveyRepository.findByTitle(request.getTitle()))) {
+            Survey surveyToCompareTitle = surveyRepository.findByTitle(request.getTitle());
+            if (survey.getTitle().equals(surveyToCompareTitle.getTitle())) {
+                throw new IllegalArgumentException("Title must be unique");
+            }
+        }
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new BadRequestException(ErrorMessage.idNotFound("user")));
+        survey.setUser(user);
+        Survey surveySaved = surveyRepository.save(survey);
+
+        /*send email */
+
+        if (Objects.nonNull(surveySaved.getUser())) {
+        emailHelper.sendMail(surveySaved.getUser().getEmail(),
+        surveySaved.getUser().getUserName(), surveySaved.getTimeStamp());
+        }
+
+        return SurveyHelper.surveyToResp(surveySaved);
     }
 
     @Override

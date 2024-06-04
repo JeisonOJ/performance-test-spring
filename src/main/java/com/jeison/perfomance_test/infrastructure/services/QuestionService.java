@@ -16,6 +16,7 @@ import com.jeison.perfomance_test.domain.entities.OptionQuestion;
 import com.jeison.perfomance_test.domain.entities.Question;
 import com.jeison.perfomance_test.domain.repositories.OptionQuestionRepository;
 import com.jeison.perfomance_test.domain.repositories.QuestionRepository;
+import com.jeison.perfomance_test.domain.repositories.SurveyRepository;
 import com.jeison.perfomance_test.infrastructure.abstract_services.IQuestionService;
 import com.jeison.perfomance_test.infrastructure.helpers.OptionQuestionHelper;
 import com.jeison.perfomance_test.infrastructure.helpers.QuestionHelper;
@@ -36,6 +37,8 @@ public class QuestionService implements IQuestionService {
     private QuestionRepository questionRepository;
     @Autowired
     private OptionQuestionRepository optionQuestionRepository;
+    @Autowired
+    private SurveyRepository surveyRepository;
 
     @Override
     public Page<QuestionResp> findAll(int page, int size, SortType sortType) {
@@ -68,7 +71,10 @@ public class QuestionService implements IQuestionService {
             if (request.getOptions().isEmpty()) {
                 throw new IllegalArgumentException("Options are required");
             }
-            question = questionRepository.save(QuestionHelper.reqToQuestion(request));
+            Question questionToCreate = QuestionHelper.reqToQuestion(request);
+            questionToCreate.setSurvey(surveyRepository.findById(request.getSurveyId())
+                    .orElseThrow(() -> new BadRequestException(ErrorMessage.idNotFound("survey"))));
+            question = questionRepository.save(questionToCreate);
             Question question2 = getById(question.getId());
             List<OptionQuestion> options = request.getOptions().stream().map(option -> {
                 OptionQuestion optionQuestion = OptionQuestionHelper.reqToQuestion(option);
@@ -76,12 +82,15 @@ public class QuestionService implements IQuestionService {
                 return optionQuestionRepository.save(optionQuestion);
             }).toList();
             question.setOptions(options);
-        }else if (request.getType().equals(TypeQuestion.OPEN)) {
-            question = questionRepository.save(QuestionHelper.reqToQuestion(request));
-        }else{
+        } else if (request.getType().equals(TypeQuestion.OPEN)) {
+            Question questionToCreate = QuestionHelper.reqToQuestion(request);
+            questionToCreate.setSurvey(surveyRepository.findById(request.getSurveyId())
+                    .orElseThrow(() -> new BadRequestException(ErrorMessage.idNotFound("survey"))));
+            question = questionRepository.save(questionToCreate);
+        } else {
             throw new IllegalArgumentException("type must be OPEN or CLOSED");
         }
-        
+
         return QuestionHelper.questionToResp(question);
     }
 
@@ -95,6 +104,8 @@ public class QuestionService implements IQuestionService {
             }
             Question questionToUpdate = QuestionHelper.reqToQuestion(request);
             questionToUpdate.setId(id);
+            questionToUpdate.setSurvey(surveyRepository.findById(request.getSurveyId())
+                    .orElseThrow(() -> new BadRequestException(ErrorMessage.idNotFound("survey"))));
             question = questionRepository.save(questionToUpdate);
             Question question2 = getById(question.getId());
             List<OptionQuestion> options = request.getOptions().stream().map(option -> {
@@ -103,14 +114,16 @@ public class QuestionService implements IQuestionService {
                 return optionQuestionRepository.save(optionQuestion);
             }).toList();
             question.setOptions(options);
-        }else if (request.getType().equals(TypeQuestion.OPEN)) {
+        } else if (request.getType().equals(TypeQuestion.OPEN)) {
             Question questionToUpdate = QuestionHelper.reqToQuestion(request);
             questionToUpdate.setId(id);
+            questionToUpdate.setSurvey(surveyRepository.findById(request.getSurveyId())
+                    .orElseThrow(() -> new BadRequestException(ErrorMessage.idNotFound("survey"))));
             question = questionRepository.save(questionToUpdate);
-        }else{
+        } else {
             throw new IllegalArgumentException("type must be OPEN or CLOSED");
         }
-        
+
         return QuestionHelper.questionToResp(question);
     }
 
@@ -126,9 +139,9 @@ public class QuestionService implements IQuestionService {
 
     @Override
     public QuestionResp updateText(QuestionOnlyTextReq questionOnlyTextReq, Long id) {
-       Question question = getById(id);
-       question.setText(questionOnlyTextReq.getText());
-       return QuestionHelper.questionToResp(question);
+        Question question = getById(id);
+        question.setText(questionOnlyTextReq.getText());
+        return QuestionHelper.questionToResp(question);
     }
 
 }
