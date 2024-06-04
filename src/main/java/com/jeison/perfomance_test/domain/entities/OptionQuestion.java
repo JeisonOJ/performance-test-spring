@@ -27,7 +27,7 @@ public class OptionQuestion {
     @Lob
     private String text;
     @Column(nullable = false)
-    private boolean isActive;
+    private Boolean isActive;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
         name = "question_id",

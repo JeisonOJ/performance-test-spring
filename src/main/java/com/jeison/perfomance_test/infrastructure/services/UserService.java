@@ -26,14 +26,6 @@ public class UserService implements IUserService {
     @Autowired
     private final UserRepository userRepository;
 
-    // @Autowired
-    // private final EmailHelper emailHelper;
-
-    // va luego de agregar
-    // if (Objects.nonNull(client.getEmail())) {
-    //     this.emailHelper.sendMail(client.getEmail(), client.getFirstName(), employee.getFirstName(), appointment.getDateTime());
-    // }
-
     @Override
     public Page<UserResp> findAll(int page, int size, SortType sortType) {
         if (page < 0)

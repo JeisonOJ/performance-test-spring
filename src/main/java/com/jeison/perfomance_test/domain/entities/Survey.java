@@ -39,7 +39,7 @@ public class Survey {
     @Column(nullable = false)
     private LocalDateTime timeStamp;
     @Column(nullable = false)
-    private boolean isActive;
+    private Boolean isActive;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
         name = "user_id",
